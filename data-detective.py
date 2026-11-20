@@ -21,10 +21,38 @@ def load_raw_data(filename):
 def clean_data(tweets):
     """
     QUEST 1: Handle missing fields.
-    Check for missing text, and replace empty likes/retweets with 0.
-    Return a clean list of tweets.
+    Remove tweets with no Text, replace empty/invalid Likes or Retweets with 0.
+    Likes and Retweets are converted to int so they can be compared later.
+    Returns a clean list of tweets.
     """
-    pass
+    clean_tweets = []
+    removed_count = 0
+    fixed_count = 0
+
+    for tweet in tweets:
+        text = (tweet.get("Text") or "").strip()
+        if text == "":
+            removed_count += 1
+            continue
+
+        tweet["Text"] = text
+        row_fixed = False
+
+        for field in ("Likes", "Retweets"):
+            value = (tweet.get(field) or "").strip()
+            try:
+                tweet[field] = int(value)
+            except ValueError:
+                tweet[field] = 0
+                row_fixed = True
+
+        if row_fixed:
+            fixed_count += 1
+        clean_tweets.append(tweet)
+
+    print(f"Data audit: {removed_count} rows removed (missing Text), "
+          f"{fixed_count} rows fixed (missing Likes/Retweets set to 0).")
+    return clean_tweets
 
 def find_viral_tweet(tweets):
     """
@@ -50,6 +78,7 @@ if __name__ == "__main__":
     # Load the messy data
     dataset = load_raw_data("twitter_dataset.csv")
     print(f"Loaded {len(dataset)} raw tweets.\n")
-    
+
     # Call your functions here to complete the quests!
-    # Example: clean_dataset = clean_data(dataset)
+    clean_dataset = clean_data(dataset)
+    print(f"{len(clean_dataset)} tweets remain after cleaning.\n")
