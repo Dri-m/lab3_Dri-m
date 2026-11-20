@@ -58,8 +58,22 @@ def find_viral_tweet(tweets):
     """
     QUEST 2: Loop through the list to find the tweet with the highest 'Likes'.
     Do not use the max() function.
+    Expects cleaned data (Likes already converted to int by clean_data).
     """
-    pass
+    if len(tweets) == 0:
+        print("Error: no tweets to analyze. Check that the dataset is not empty.")
+        return None
+
+    viral = tweets[0]
+    for tweet in tweets:
+        if tweet["Likes"] > viral["Likes"]:
+            viral = tweet
+
+    print("--- Most viral tweet ---")
+    print(f"Username: {viral['Username']}")
+    print(f"Likes:    {viral['Likes']}")
+    print(f"Text:     {viral['Text']}\n")
+    return viral
 
 def custom_sort_by_likes(tweets):
     """
@@ -82,3 +96,4 @@ if __name__ == "__main__":
     # Call your functions here to complete the quests!
     clean_dataset = clean_data(dataset)
     print(f"{len(clean_dataset)} tweets remain after cleaning.\n")
+    viral_tweet = find_viral_tweet(clean_dataset)
