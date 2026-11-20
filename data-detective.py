@@ -80,7 +80,18 @@ def custom_sort_by_likes(tweets):
     QUEST 3: Implement Bubble Sort or Selection Sort to sort the list 
     by 'Likes' in descending order. NO .sort() allowed!
     """
-    pass
+    result = tweets[:]
+    n = len(result)
+
+    for i in range(n - 1):
+        best = i
+        for j in range(i + 1, n):
+            if result[j]["Likes"] > result[best]["Likes"]:
+                best = j
+        if best != i:
+            result[i], result[best] = result[best], result[i]
+
+    return result
 
 def search_tweets(tweets, keyword):
     """
@@ -97,3 +108,8 @@ if __name__ == "__main__":
     clean_dataset = clean_data(dataset)
     print(f"{len(clean_dataset)} tweets remain after cleaning.\n")
     viral_tweet = find_viral_tweet(clean_dataset)
+    sorted_tweets = custom_sort_by_likes(clean_dataset)
+    print("--- Top 5 tweets by likes ---")
+    for tweet in sorted_tweets[:5]:
+        print(f"{tweet['Username']}: {tweet['Likes']} likes")
+    print()
