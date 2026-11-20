@@ -97,7 +97,17 @@ def search_tweets(tweets, keyword):
     """
     QUEST 4: Search for a keyword and extract matching tweets into a new list.
     """
-    pass
+    matches = []
+    word = keyword.strip().lower()
+
+    if word == "":
+        return matches
+
+    for tweet in tweets:
+        if word in tweet["Text"].lower():
+            matches.append(tweet)
+
+    return matches
 
 if __name__ == "__main__":
     # Load the messy data
@@ -107,9 +117,21 @@ if __name__ == "__main__":
     # Call your functions here to complete the quests!
     clean_dataset = clean_data(dataset)
     print(f"{len(clean_dataset)} tweets remain after cleaning.\n")
+
     viral_tweet = find_viral_tweet(clean_dataset)
+
     sorted_tweets = custom_sort_by_likes(clean_dataset)
-    print("--- Top 5 tweets by likes ---")
-    for tweet in sorted_tweets[:5]:
+    print("--- Top 10 tweets by likes ---")
+    for tweet in sorted_tweets[:10]:
         print(f"{tweet['Username']}: {tweet['Likes']} likes")
     print()
+
+    print("--- Keyword search ---")
+    keyword = input("Enter a search word (e.g., health, west): ").strip()
+    if keyword == "":
+        print("Error: no search word entered. Please type a word such as 'health'.")
+    else:
+        results = search_tweets(clean_dataset, keyword)
+        print(f"\n{len(results)} tweet(s) matched '{keyword}'.\n")
+        for tweet in results:
+            print(f"{tweet['Username']} ({tweet['Likes']} likes): {tweet['Text']}\n")
